@@ -22,7 +22,7 @@ class RestExceptionHandler {
             erros[fieldName] = messageError
         }
         return ResponseEntity(
-            ExceptionDetails(title = "Bad Request - Consult the documentation", timestamp = LocalDateTime.now(),
+            ExceptionDetails(title = "Bad Request! Consult the documentation", timestamp = LocalDateTime.now(),
                 status = HttpStatus.BAD_REQUEST.value(),
                 exception = ex.javaClass.toString(),
                 details = erros
@@ -33,7 +33,7 @@ class RestExceptionHandler {
     @ExceptionHandler(DataAccessException::class)
     fun handlerValidException(ex: DataAccessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ExceptionDetails(title = "Conflict - Consult the documentation", timestamp = LocalDateTime.now(),
+                ExceptionDetails(title = "Conflict! Consult the documentation", timestamp = LocalDateTime.now(),
                     status = HttpStatus.CONFLICT.value(),
                     exception = ex.javaClass.toString(),
                     details = mutableMapOf(ex.cause.toString() to ex.message)
@@ -47,7 +47,7 @@ class RestExceptionHandler {
     fun handlerValidException(ex: BusinessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ExceptionDetails(
-                title = "BAD REQUEST - Consult the documentation", timestamp = LocalDateTime.now(),
+                title = "Bad Request! Consult the documentation", timestamp = LocalDateTime.now(),
                 status = HttpStatus.BAD_REQUEST.value(),
                 exception = ex.javaClass.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message)
@@ -60,7 +60,7 @@ class RestExceptionHandler {
     fun handlerValidException(ex: IllegalArgumentException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
             ExceptionDetails(
-                title = "Conflict - Consult the documentation", timestamp = LocalDateTime.now(),
+                title = "Conflict! Consult the documentation", timestamp = LocalDateTime.now(),
                 status = HttpStatus.CONFLICT.value(),
                 exception = ex.javaClass.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message)
