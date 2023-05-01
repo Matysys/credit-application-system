@@ -77,7 +77,7 @@ class CreditResourceTest {
     fun `should find all credit by customerId and return 200 status`() {
         //given
         val customer: Customer = customerRepository.save(builderCustomerDto().toEntity())
-        val credit: CreditDto = builderCreditDto(customerId = customer.id!!.toLong())
+        val credit: Credit = creditRepository.save(builderCreditDto(customerId = customer.id!!.toLong()).toEntity())
         val valueAsString: String = objectMapper.writeValueAsString(credit)
 
         //when
@@ -88,6 +88,8 @@ class CreditResourceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(valueAsString)
         ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].creditValue").value("2000.0"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].numberOfInstallments").value("5"))
             .andDo(MockMvcResultHandlers.print())
 
 
@@ -96,20 +98,24 @@ class CreditResourceTest {
     @Test
     fun `should find credit by customerId, creditCode and return 200 status`() {
         //given
-        val customer: Customer = customerRepository.save(builderCustomerDto().toEntity())
-        val credit: Credit = creditRepository.save(builderCreditDto(customerId = customer.id!!.toLong()).toEntity())
+        customerRepository.save(builderCustomerDto().toEntity())
+        val credit: Credit = creditRepository.save(builderCreditDto().toEntity())
         val valueAsString: String = objectMapper.writeValueAsString(credit)
 
         //when
 
         //then
         mockMvc.perform(
-            MockMvcRequestBuilders.get("$URL/${credit.creditCode}?customerId=${customer.id}")
+            MockMvcRequestBuilders.get("$URL/${credit.creditCode}?customerId=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(valueAsString)
         ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.creditValue").value("2000.0"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.emailCustomer").value("mateus@email.com"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfInstallments").value("5"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("IN_PROGRESS"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.incomeCustomer").value("2000.0"))
             .andDo(MockMvcResultHandlers.print())
-
 
     }
 
